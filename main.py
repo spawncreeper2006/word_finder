@@ -1,11 +1,15 @@
 
+
 words = []
+common_words = []
 MIN_WORD_LENGTH = 3
 
 def get_data():
-    global words
+    global words, common_words
     with open('words2.txt') as f:
         words = f.read().splitlines()
+    with open('common_words2.txt') as f:
+        common_words = f.read().splitlines()
     words = list(filter(lambda x: len(x)>=MIN_WORD_LENGTH, words))
 get_data()
 
@@ -26,18 +30,42 @@ def find_substrings(main_str: str) -> list[str]:
             substrings.append(word)
     return substrings
 
-def format_str_list(ls: list[str]) -> str:
+def output_list(ls: list[str]) -> str:
+    global common_words
 
-    new_ls = []
-    for i in range(len(ls)):
-        new_ls.append(f'{i + 1}. {ls[i]}')
-    return '\n'.join(new_ls)
+
+    
+    common_word_ls = []
+    less_common_word_ls = ls
+    for word in ls:
+        if word in common_words:
+            common_word_ls.append(word)
+            less_common_word_ls.remove(word)
+
+
+    if common_word_ls != []:
+        print ('Common Words:')
+
+        for i in range(len(common_word_ls)):
+            print(f'{i + 1}. {common_word_ls[i]}')
+
+    else:
+        print ('no common words found')
+
+    if less_common_word_ls != []:
+        print ('Less Common Words:')
+        for i in range(len(less_common_word_ls)):
+            print(f'{i + 1}. {less_common_word_ls[i]}')
+
+    else:
+        print ('no less common words')
+
 
 def main():
     while True:
         user_input = input('Input Letters: ')
         substrings = find_substrings(user_input)
-        print (format_str_list(substrings))
+        output_list(substrings)
 
 if __name__ == '__main__':
     main()
